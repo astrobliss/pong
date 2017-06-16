@@ -29,6 +29,7 @@ function reset(){
 	xv=-xv;
 	if(xv<0) xv=yv=-1*speed;
 	else xv=yv=speed;
+	<audio src="FX Riser 001 Lex Luger Effect.wav" autoplay=""></audio>
 }
 function update(){
 	bx+=xv;
@@ -41,6 +42,7 @@ function update(){
 	}
 	if(bx>c.width){
 		if(by>p2y&&by<p2y+ph){
+			<audio src="Gun Shot.wav" autoplay=""></audio>
 		xv=-xv;
 		dy=by-(p2y+ph/2);
 		yv=dy*.3;
@@ -52,6 +54,7 @@ function update(){
 
 	if(bx<0){
 		if(by>p1y&&by<p1y+ph){
+			<audio src="Gun Shot.wav" autoplay=""></audio>
 		xv=-xv;
 		dy=by-(p1y+ph/2);
 		yv=dy*.3;
