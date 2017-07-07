@@ -104,11 +104,11 @@ function update(){
 		reset();
 		}
 	}
-	if(p2y+ph/2<cheaty+ais&&p2y+ph/2>cheaty-ais)
+	if(p2y+ph/2<=cheaty+ais&&p2y+ph/2>=cheaty-ais)
 		p2y=by-50;
-	if(p2y+ph/2>=cheaty+ais)
+	if(p2y+ph/2>cheaty)
 		p2y-=ais;
-	if(p2y+ph/2<=cheaty-ais)
+	if(p2y+ph/2<cheaty)
 		p2y+=ais;
 
 	cc.fillStyle='black';
