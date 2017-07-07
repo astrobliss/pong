@@ -31,7 +31,7 @@ function reset(){
 	if(xv<0) xv=yv=-1*speed;
 	else xv=yv=speed;
 	cheatx=bx;
-	cheaty=yv;
+	cheaty=by;
 	cheatvx=xv*cheatspeed;
 	cheatvy=yv*cheatspeed;
 	var audio = new Audio("FX Riser 001 Lex Luger Effect.wav");
@@ -96,12 +96,12 @@ function update(){
 		reset();
 		}
 	}
-	//if(p2y+ph/2<=cheaty+ais&&p2y+ph/2>=cheaty-ais)
-	//	p2y=cheaty-50;
-	//if(p2y+ph/2>cheaty)
-	//	p2y-=ais;
-	//if(p2y+ph/2<cheaty)
-	//	p2y+=ais;
+	if(p2y+ph/2<=cheaty+ais&&p2y+ph/2>=cheaty-ais)
+		p2y=cheaty-50;
+	if(p2y+ph/2>cheaty)
+		p2y-=ais;
+	if(p2y+ph/2<cheaty)
+		p2y+=ais;
 	cc.fillStyle='black';
 	cc.fillRect(0,0,c.width,c.height);
 	cc.fillStyle='white';
