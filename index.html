@@ -82,10 +82,10 @@ function update(){
 		dy=by-(p2y+ph/2);
 		yv=dy*.3;
 
-		cheatx=bx;
-		cheaty=yv;
-		cheatvx=xv*cheatspeed;
-		cheatvy=yv*cheatspeed;
+		cheatx=c.width/2;
+		cheaty=c.height/2;
+		cheatvx=0;
+		cheatvy=0;
 	}else{
 		score1++;
 		reset();
@@ -109,19 +109,10 @@ function update(){
 		reset();
 		}
 	}
-	if(p2y+ph/2>=cheaty+aisError||p2y+ph/2<=cheaty-aisError)
-	{
-	if(p2y+ph/2<cheaty){
-		p2y+=ais;
-	} else {
+	if(p2y+ph/2>=cheaty+ais)
 		p2y-=ais;
-	}}
-	else{
-	if(p2y+ph/2<cheaty)
-		p2y+=slowAis;
-	 else p2y-= slowAis;
-	
-	}
+	if(p2y+ph/2<=cheaty-ais)
+		p2y+=ais;
 
 	cc.fillStyle='black';
 	cc.fillRect(0,0,c.width,c.height);
