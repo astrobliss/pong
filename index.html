@@ -1,9 +1,9 @@
 <canvas id="gc" width="640" height="480"></canvas>
 <script>
-p1y=p2y=40;
+p1y=p2y=240;
 pt=10;
 ph=100;
-bx=by=100;
+bx=by=240;
 bd=6;
 	cheatx=cheaty=100;
 	cheatspeed=10;
@@ -15,7 +15,6 @@ ais=6;
 aisError=5;
 slowAis=1;
 window.onload=function(){
-
 c=document.getElementById('gc');
 cc=c.getContext('2d');
 setInterval(update,1000/60);
@@ -27,7 +26,6 @@ function reset(){
 	console.log('updated');
 	ais+=score1-score2;
 	if(ais<3){ais=4;}
-
 	bx=c.width/2;
 	by=c.height/2;
 	xv=-xv;
@@ -45,7 +43,6 @@ function update(){
 	by+=yv;
 	cheaty+=cheatvy;
 	cheatx+=cheatvx;
-
 	if(cheaty<0&&cheatvy<0){
 		cheatvy=-cheatvy;
 	}
@@ -59,26 +56,21 @@ function update(){
 		cheatvx=0;
 		console.log('cheat '+cheaty+ ' ' + cheatx);
 	}
-
-
 	if(by<0&&yv<0){
 		yv=-yv;
 	}
 	if(by>c.height&&yv<c.height){
 		yv=-yv;
 	}
-
 	if(bx>c.width){
 		console.log('ball ' + bx + ' ' + by);
 		if(by>p2y&&by<p2y+ph){
 			
 			var audio = new Audio("Gun Shot.wav");
 			audio.play();
-
 		xv=-xv;
 		dy=by-(p2y+ph/2);
 		yv=dy*.3;
-
 		cheatx=c.width/2;
 		cheaty=c.height/2;
 		cheatvx=0;
@@ -88,7 +80,6 @@ function update(){
 		reset();
 		}
 	}
-
 	if(bx<0){
 		if(by>p1y&&by<p1y+ph){
 			var audio = new Audio("Gun Shot.wav");
@@ -106,12 +97,11 @@ function update(){
 		}
 	}
 	if(p2y+ph/2<=cheaty+ais&&p2y+ph/2>=cheaty-ais)
-		p2y=by-50;
+		p2y=cheaty-50;
 	if(p2y+ph/2>cheaty)
 		p2y-=ais;
 	if(p2y+ph/2<cheaty)
 		p2y+=ais;
-
 	cc.fillStyle='black';
 	cc.fillRect(0,0,c.width,c.height);
 	cc.fillStyle='white';
@@ -120,6 +110,5 @@ function update(){
 	cc.fillRect(bx-bd/2,by-bd/2,bd,bd);
 	cc.fillText(score1,100,100);
 	cc.fillText(score2,c.width-100,100);
-
 }
 </script>
