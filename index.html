@@ -56,7 +56,7 @@ function update(){
 	{
 		cheatvy=0;
 		cheatvx=0;
-		console.log('cheat '+cheaty+ ' ' + cheatx);
+		console.log('cheat '+cheaty+ ' ' + cheatx+ ' ' +cheatvx+' '+cheatvy);
 	}
 
 
@@ -68,8 +68,9 @@ function update(){
 	}
 
 	if(bx>c.width){
+		console.log('ball' +bx+' '+by+' ' xv+' '+yv);
 		if(by>p2y&&by<p2y+ph){
-			console.log('ball' +bx+' '+by);
+			
 			var audio = new Audio("Gun Shot.wav");
 			audio.play();
 
@@ -89,7 +90,6 @@ function update(){
 
 	if(bx<0){
 		if(by>p1y&&by<p1y+ph){
-			console.log('ball' +bx+' '+by);
 			var audio = new Audio("Gun Shot.wav");
 			audio.play();
 		xv=-xv;
