@@ -5,8 +5,11 @@ pt=10;
 ph=100;
 bx=by=100;
 bd=6;
+	cheatx=cheaty=100;
+	cheatspeed=10;
 speed=5;
 yv=xv=speed;
+	cheatvy=cheatvx=cheatspeed*speed;
 score1=score2=0;
 ais=6;
 aisError=5;
@@ -29,26 +32,58 @@ function reset(){
 	xv=-xv;
 	if(xv<0) xv=yv=-1*speed;
 	else xv=yv=speed;
+	cheatx=bx;
+	cheaty=vy;
+	cheatvx=xv*cheatspeed;
+	cheatvy=yv*cheatspeed;
 	var audio = new Audio("FX Riser 001 Lex Luger Effect.wav");
 			audio.play();
 }
 function update(){
 	bx+=xv;
 	by+=yv;
+	cheaty+=cheatvy;
+	cheatx+=cheatvx;
+
+	if(cheaty<0&&cheatvy<0){
+		cheatvy=-cheatvy;
+	}
+	if(cheaty>c.height&&cheatvy<c.height){
+		cheatvy=-cheatvy;
+	}
+	if(cheatx<=0)
+	{	
+		cheatvy=0; 
+		cheatvx=0;
+	}
+	if(cheaty>=c.width)
+	{
+		cheatvy=0;
+		cheatvx=0;
+	}
+
+
 	if(by<0&&yv<0){
 		yv=-yv;
 	}
 	if(by>c.height&&yv<c.height){
 		yv=-yv;
 	}
+
 	if(bx>c.width){
 		if(by>p2y&&by<p2y+ph){
+			
 			var audio = new Audio("Gun Shot.wav");
 			audio.play();
 
 		xv=-xv;
 		dy=by-(p2y+ph/2);
 		yv=dy*.3;
+
+		cheatx=bx;
+		cheaty=vy;
+		cheatvx=xv*cheatspeed;
+		cheatvy=yv*cheatspeed;
 	}else{
 		score1++;
 		reset();
@@ -62,20 +97,24 @@ function update(){
 		xv=-xv;
 		dy=by-(p1y+ph/2);
 		yv=dy*.3;
+		cheatx=bx;
+		cheaty=vy;
+		cheatvx=xv*cheatspeed;
+		cheatvy=yv*cheatspeed;
 	}else{
 		score2++;
 		reset();
 		}
 	}
-	if(p2y+ph/2>=by+aisError||p2y+ph/2<=by-aisError)
+	if(p2y+ph/2>=cheaty+aisError||p2y+ph/2<=cheaty-aisError)
 	{
-	if(p2y+ph/2<by){
+	if(p2y+ph/2<cheaty){
 		p2y+=ais;
 	} else {
 		p2y-=ais;
 	}}
 	else{
-	if(p2y+ph/2<by)
+	if(p2y+ph/2<cheaty)
 		p2y+=slowAis;
 	 else p2y-= slowAis;
 	
