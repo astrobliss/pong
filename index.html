@@ -51,13 +51,13 @@ function update(){
 	if(cheaty>c.height&&cheatvy<c.height){
 		cheatvy=-cheatvy;
 	}
-	if(cheatx<=0)
+	if(cheatx<=0&&cheatvx!=0)
 	{	
 		cheatvy=0; 
 		cheatvx=0;
 		console.log('cheat '+cheaty+ ' ' + cheatx);
 	}
-	if(cheaty>=c.width)
+	if(cheaty>=c.width&&cheatvx!=0)
 	{
 		cheatvy=0;
 		cheatvx=0;
