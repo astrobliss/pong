@@ -7,6 +7,7 @@ bx=240;
 by=320;
 bd=6;
 updates=0;
+updateCount=0;
 stuck=false;
 foundSpeed=0;
 	cheatx=240;
@@ -97,7 +98,6 @@ function update(){
 		cheaty=by;
 		cheatvx=vx*cheatspeed;
 		cheatvy=vy*cheatspeed;
-		stuck=false;
 		updates=0;
 	}else{
 		score2++;
@@ -116,8 +116,9 @@ function update(){
 	else{
 		if(foundSpeed==0)
 		{foundSpeed=(cheaty-(p2y+ph/2))/updates;console.log("foundSpeed: "+foundSpeed);}
+	updateCount++;
 	p2y+=foundSpeed;
-			
+	if(updateCount==updates){updates=0;updateCount=0;stuck=false;}		
 	}
 	cc.fillStyle='black';
 	cc.fillRect(0,0,c.width,c.height);
