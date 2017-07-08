@@ -121,9 +121,8 @@ function update(){
 			foundSpeed=(cheaty-(p2y+ph/2))/updates*3/4;
 			console.log('foundSpeed: '+foundSpeed);
 		}
-		p2y+=foundSpeed;
-		updateCount++;
-		if(updateCount==updates)console.log('hit');
+		if(p2y!=cheaty-50)p2y+=foundSpeed;
+		;
 	}
 	cc.fillStyle='black';
 	cc.fillRect(0,0,c.width,c.height);
