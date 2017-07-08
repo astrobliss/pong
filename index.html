@@ -62,7 +62,7 @@ function update(){
 		cheatvy=0;
 		cheatvx=0;
 		stuck=true;
-		console.log('cheatz '+cheatx+ ' ' + cheaty);
+		console.log('cheat '+cheatx+ ' ' + cheaty);
 	}
 	if(by<0&&vy<0){
 		vy=-vy;
@@ -125,7 +125,7 @@ function update(){
 	}else{
 		if(foundSpeed==0)
 		{
-			foundSpeed=(cheaty-(p2y+50))/(updates*3);
+			foundSpeed=(cheaty-(p2y+50))/(updates)*3;
 			console.log('foundSpeed: '+foundSpeed);
 		}
 		p2y+=foundSpeed;
