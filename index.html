@@ -66,7 +66,6 @@ function update(){
 		cheatvy=0;
 		cheatvx=0;
 		stuck=true;
-		console.log('cheatz '+cheatx+ ' ' + cheaty);
 	}
 	if(by<0&&vy<0){
 		vy=-vy;
@@ -75,7 +74,6 @@ function update(){
 		vy=-vy;
 	}
 	if(bx>c.width){
-		console.log('ball ' + bx + ' ' + by);
 		if(by>p2y&&by<p2y+ph){
 			
 			var audio = new Audio("Gun Shot.wav");
