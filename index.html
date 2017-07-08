@@ -104,9 +104,17 @@ function update(){
 		}
 	}
 	
-	if(stuck){
-		if(foundSpeed==0)
-			foundSpeed=(cheaty-(p2y+ph/2))/updates;
+	if(!stuck)
+	{
+	if(p2y+ph/2<=cheaty+ais&&p2y+ph/2>=cheaty-ais)
+		p2y=cheaty;
+	if(p2y+ph/2>cheaty)
+		p2y-=ais;
+	if(p2y+ph/2<cheaty)
+		p2y+=ais;
+	}else{
+	if(foundSpeed==0)
+		foundSpeed=(cheaty-(p2y+ph/2))/updates;
 	p2y+=foundSpeed;
 			
 	}
