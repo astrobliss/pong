@@ -61,7 +61,7 @@ function update(){
 		cheatvy=0;
 		cheatvx=0;
 		stuck=true;
-		console.log('cheat '+cheatx+ ' ' + cheaty);
+		console.log('cheatt '+cheatx+ ' ' + cheaty);
 	}
 	if(by<0&&vy<0){
 		vy=-vy;
@@ -118,10 +118,12 @@ function update(){
 	}else{
 		if(foundSpeed==0)
 		{
-			foundSpeed=(cheaty-p2y+ph/2)/updates;
+			foundSpeed=(cheaty-(p2y+ph/2))/updates;
 			console.log('foundSpeed: '+foundSpeed);
 		}
 		p2y+=foundSpeed;
+		updateCount++;
+		if(updateCount==updates)console.log('hit');
 	}
 	cc.fillStyle='black';
 	cc.fillRect(0,0,c.width,c.height);
