@@ -18,7 +18,7 @@ speed=5/4;
 vy=vx=speed;
 	cheatvy=cheatvx=cheatspeed*speed;
 score1=score2=0;
-ais=0.08;
+ais=.005;
 aisError=1;
 slowAis=1;
 	ratio=2.5;
@@ -29,6 +29,7 @@ setInterval(update,1000/240);
 c.addEventListener('mousemove',function(e){
 	p1y=e.clientY-ph/2;
 	});
+
 }
 function reset(){
 	ais+=score1-score2;
