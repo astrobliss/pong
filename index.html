@@ -127,7 +127,7 @@ function update(){
 			foundSpeed=(cheaty-(p2y+50))/(updates*3/4);
 			console.log('foundSpeed: '+foundSpeed);
 		}
-		p2y-=foundSpeed;
+		p2y+=foundSpeed;
 	}
 	cc.fillStyle='black';
 	cc.fillRect(0,0,c.width,c.height);
