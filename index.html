@@ -6,11 +6,10 @@ ph=100;
 bx=320;
 by=240;
 bd=6;
+	magic=171;
 	
 	my=240;
-updates=0;
 stuck=false;
-updateCount=0;
 foundSpeed=0;
 	cheatx=320;
 	cheaty=240;
@@ -112,7 +111,9 @@ function update(){
 		cheaty=by;
 		cheatvx=vx*cheatspeed;
 		cheatvy=vy*cheatspeed;
+		magic=343;
 	}else{
+		magic=171;
 		score2++;
 		reset();
 		}
@@ -128,11 +129,9 @@ function update(){
 	}else{
 		if(foundSpeed==0)
 		{
-			foundSpeed=(cheaty-(p2y+50))/(updates)*ratio;
-			console.log('foundSpeedd: '+foundSpeed+ ' ' + updates);
+			foundSpeed=(cheaty-(p2y+50))/magic;
+			console.log('foundSpeedz: '+foundSpeed+ ' ' + updates);
 		}
-		updateCount++;
-		if(updateCount!=updates)
 			p2y+=foundSpeed;
 		
 	}
