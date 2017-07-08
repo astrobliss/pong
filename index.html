@@ -59,7 +59,7 @@ function update(){
 	{
 		cheatvy=0;
 		cheatvx=0;
-		console.log('cheatz '+cheatx+ ' ' + cheaty);
+		console.log('cheat '+cheatx+ ' ' + cheaty);
 		stuck==true;
 	}
 	if(by<0&&vy<0){
@@ -105,16 +105,16 @@ function update(){
 	}
 	if(!stuck)
 	{
-	if(p2y+ph/2<=c.width/2+ais&&p2y+ph/2>=c.width/2-ais)
-		p2y=c.width/2-50;
-	if(p2y+ph/2>c.width/2)
+	if(p2y+ph/2<=cheaty+ais&&p2y+ph/2>=cheaty-ais)
+		p2y=cheaty-50;
+	if(p2y+ph/2>cheaty)
 		p2y-=ais;
-	if(p2y+ph/2<c.width/2)
+	if(p2y+ph/2<cheaty)
 		p2y+=ais;
 	}
 	else{
 		if(foundSpeed==0)
-		{foundSpeed=((cheaty-(p2y+ph/2))/updates)/4;console.log(foundSpeed);}
+			foundSpeed=(cheaty-(p2y+ph/2))/updates/4;
 	p2y+=foundSpeed;
 			
 	}
