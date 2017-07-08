@@ -4,13 +4,13 @@ p1y=p2y=240;
 pt=10;
 ph=100;
 bx=240;
-by=320;
+by=270;
 bd=6;
 updates=0;
 stuck=false;
 foundSpeed=0;
 	cheatx=240;
-	cheaty=320;
+	cheaty=270;
 	cheatspeed=3;
 speed=5/4;
 vy=vx=speed;
@@ -105,11 +105,11 @@ function update(){
 	}
 	if(!stuck)
 	{
-	if(p2y+ph/2<=cheaty+ais&&p2y+ph/2>=cheaty-ais)
-		p2y=cheaty-50;
-	if(p2y+ph/2>cheaty)
+	if(p2y+ph/2<=270+ais&&p2y+ph/2>=270-ais)
+		p2y=270;
+	if(p2y+ph/2>270)
 		p2y-=ais;
-	if(p2y+ph/2<cheaty)
+	if(p2y+ph/2<270)
 		p2y+=ais;
 	}
 	else{
