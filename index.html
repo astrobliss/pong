@@ -6,6 +6,7 @@ ph=100;
 bx=320;
 by=240;
 bd=6;
+	
 	my=240;
 updates=0;
 stuck=false;
@@ -21,6 +22,7 @@ score1=score2=0;
 ais=1/4;
 aisError=5;
 slowAis=1;
+	ratio=(Math.sqrt(cheatvy*cheatvy+cheatvx*cheatvx)-Math.sqrt(vy*vy-vx*vx));
 window.onload=function(){
 c=document.getElementById('gc');
 cc=c.getContext('2d');
@@ -43,6 +45,7 @@ function reset(){
 	cheatvy=vy*cheatspeed;
 	var audio = new Audio("FX Riser 001 Lex Luger Effect.wav");
 			audio.play();
+	ratio=(Math.sqrt(cheatvy*cheatvy+cheatvx*cheatvx)-Math.sqrt(vy*vy-vx*vx));
 }
 function update(){
 	bx+=vx;
@@ -59,6 +62,7 @@ function update(){
 	
 	if(cheatx>=c.width&&cheatvx!=0)
 	{
+		
 		cheatvy=0;
 		cheatvx=0;
 		stuck=true;
@@ -125,7 +129,7 @@ function update(){
 	}else{
 		if(foundSpeed==0)
 		{
-			foundSpeed=(cheaty-(p2y+50))/(updates)*3;
+			foundSpeed=(cheaty-(p2y+50))/(updates*ratio);
 			console.log('foundSpeed: '+foundSpeed);
 		}
 		p2y+=foundSpeed;
