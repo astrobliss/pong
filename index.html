@@ -14,6 +14,7 @@ foundSpeed=0;
 	cheatx=320;
 	cheaty=240;
 	cheatspeed=3;
+	counter=0;
 speed=5/4;
 vy=vx=speed;
 	cheatvy=cheatvx=cheatspeed*speed;
@@ -52,6 +53,7 @@ function update(){
 	by+=vy;
 	cheaty+=cheatvy;
 	cheatx+=cheatvx;
+	counter++;
 	if(cheaty<0&&cheatvy<0){
 		cheatvy=-cheatvy;
 	}
@@ -85,12 +87,14 @@ function update(){
 		cheatvy=0;
 		foundSpeed=0;
 		stuck=false;
+			console.log(counter);
+			counter=0;
 	}else{
 		cheatvx=0;
 		cheatvy=0;
 		foundSpeed=0;
 		stuck=false;
-		//score1++;
+		score1++;
 		reset();
 		}
 	}
