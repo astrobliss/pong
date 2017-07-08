@@ -3,15 +3,16 @@
 p1y=p2y=240;
 pt=10;
 ph=100;
-bx=240;
-by=320;
+bx=320;
+by=240;
 bd=6;
+	my=240;
 updates=0;
 stuck=false;
 updateCount=0;
 foundSpeed=0;
-	cheatx=240;
-	cheaty=320;
+	cheatx=320;
+	cheaty=240;
 	cheatspeed=3;
 speed=5/4;
 vy=vx=speed;
@@ -61,7 +62,7 @@ function update(){
 		cheatvy=0;
 		cheatvx=0;
 		stuck=true;
-		console.log('cheatz '+cheatx+ ' ' + cheaty);
+		console.log('cheat '+cheatx+ ' ' + cheaty);
 	}
 	if(by<0&&vy<0){
 		vy=-vy;
