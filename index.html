@@ -102,6 +102,7 @@ function update(){
 		updateCount=0;
 		foundSpeed=0;
 		stuck=false;
+			console.log('stuck '  + stuck);
 	}else{
 		score2++;
 		reset();
@@ -118,10 +119,10 @@ function update(){
 	}else{
 		if(foundSpeed==0)
 		{
-			foundSpeed=(cheaty-(p2y+ph/2))/updates*3/4;
+			foundSpeed=((cheaty-p2y)/updates)*3/4;
 			console.log('foundSpeed: '+foundSpeed);
 		}
-		if(p2y!=cheaty-50)p2y+=foundSpeed;
+		p2y+=foundSpeed;
 		;
 	}
 	cc.fillStyle='black';
