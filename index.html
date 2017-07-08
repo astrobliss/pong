@@ -59,7 +59,7 @@ function update(){
 	{
 		cheatvy=0;
 		cheatvx=0;
-		console.log('cheatt '+cheatx+ ' ' + cheaty);
+		console.log('cheatz '+cheatx+ ' ' + cheaty);
 		stuck==true;
 	}
 	if(by<0&&vy<0){
@@ -114,7 +114,7 @@ function update(){
 	}
 	else{
 		if(foundSpeed==0)
-			foundSpeed=(cheaty-(p2y+ph/2))/updates;
+			foundSpeed=((cheaty-(p2y+ph/2))/updates)/4;
 	p2y+=foundSpeed;
 			
 	}
