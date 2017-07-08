@@ -15,6 +15,7 @@ foundSpeed=0;
 	cheaty=240;
 	cheatspeed=3;
 	counter=0;
+	returnSpeed=0;
 speed=5/4;
 vy=vx=speed;
 	cheatvy=cheatvx=cheatspeed*speed;
@@ -105,12 +106,14 @@ function update(){
 		vx=-vx;
 		dy=by-(p1y+ph/2);
 		vy=dy*.3/4;
+		returnSpeed=0;
 		cheatx=bx;
 		cheaty=by;
 		cheatvx=vx*cheatspeed;
 		cheatvy=vy*cheatspeed;
 		magic=343;
 	}else{
+		returnSpeed=0;
 		magic=171;
 		score2++;
 		reset();
@@ -118,12 +121,11 @@ function update(){
 	}
 	if(!stuck)
 	{
-		if(p2y+ph/2<=my+aisError&&p2y+ph/2>=my-aisError)
-			p2y=my-50;
-		if(p2y+ph/2>my)
-			p2y-=ais;
-		if(p2y+ph/2<my)
-			p2y+=ais;
+		if(returnSpeed==0)
+		{
+			returnSpeed=(c.height-(p2y+50))/1028;
+		}
+			p2y+=foundSpeed;
 	}else{
 		if(foundSpeed==0)
 		{
