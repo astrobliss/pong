@@ -87,7 +87,12 @@ function update(){
 		foundSpeed=0;
 		stuck=false;
 	}else{
-		
+		cheatvx=0;
+		cheatvy=0;
+		updates=0;
+		updateCount=0;
+		foundSpeed=0;
+		stuck=false;
 		score1++;
 		reset();
 		}
@@ -119,7 +124,7 @@ function update(){
 	}else{
 		if(foundSpeed==0)
 		{
-			foundSpeed=((cheaty-p2y)/updates)*4/3;
+			foundSpeed=cheaty;
 			console.log('foundSpeed: '+foundSpeed);
 		}
 		p2y+=foundSpeed;
