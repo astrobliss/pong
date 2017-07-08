@@ -82,6 +82,10 @@ function update(){
 		cheaty=c.height/2;
 		cheatvx=0;
 		cheatvy=0;
+		updates=0;
+		updateCount=0;
+		foundSpeed=0;
+		stuck=false;
 	}else{
 		score1++;
 		reset();
@@ -98,11 +102,6 @@ function update(){
 		cheaty=by;
 		cheatvx=vx*cheatspeed;
 		cheatvy=vy*cheatspeed;
-		updates=0;
-		updateCount=0;
-		foundSpeed=0;
-		stuck=false;
-			console.log('stuck '  + stuck);
 	}else{
 		score2++;
 		reset();
