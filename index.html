@@ -85,6 +85,7 @@ function update(){
 		cheatvx=0;
 		cheatvy=0;
 		updates=0;
+			console.log(updateCount);
 		updateCount=0;
 		foundSpeed=0;
 		stuck=false;
@@ -92,6 +93,7 @@ function update(){
 		cheatvx=0;
 		cheatvy=0;
 		updates=0;
+		console.log(updateCount);
 		updateCount=0;
 		foundSpeed=0;
 		stuck=false;
@@ -132,7 +134,7 @@ function update(){
 		updateCount++;
 		if(updateCount!=updates)
 			p2y+=foundSpeed;
-		console.log(updateCount);
+		
 	}
 	cc.fillStyle='black';
 	cc.fillRect(0,0,c.width,c.height);
