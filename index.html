@@ -127,9 +127,11 @@ function update(){
 		if(foundSpeed==0)
 		{
 			foundSpeed=(cheaty-(p2y+50))/(updates)*ratio;
-			console.log('foundSpeed: '+foundSpeed+ ' ' + ratio);
+			console.log('foundSpeedd: '+foundSpeed+ ' ' + ratio);
 		}
-		p2y+=foundSpeed;
+		updateCount++;
+		if(updateCount!=updates)
+			p2y+=foundSpeed;
 	}
 	cc.fillStyle='black';
 	cc.fillRect(0,0,c.width,c.height);
