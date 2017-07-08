@@ -32,6 +32,8 @@ c.addEventListener('mousemove',function(e){
 	});
 }
 function reset(){
+	ais+=score1-score2;
+	if(ais<3){ais=4;}
 	bx=c.width/2;
 	by=c.height/2;
 	vx=-vx;
