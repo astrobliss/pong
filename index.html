@@ -90,12 +90,14 @@ function update(){
 		foundSpeed=0;
 		counter=0;
 		stuck=false;
+			returnSpeed=0;
 			
 	}else{
 		cheatvx=0;
 		cheatvy=0;
 		foundSpeed=0;
 		stuck=false;
+		returnSpeed=0;
 		score1++;
 		reset();
 		}
@@ -107,14 +109,12 @@ function update(){
 		vx=-vx;
 		dy=by-(p1y+ph/2);
 		vy=dy*.3/4;
-		returnSpeed=0;
 		cheatx=bx;
 		cheaty=by;
 		cheatvx=vx*cheatspeed;
 		cheatvy=vy*cheatspeed;
 		magic=343;
 	}else{
-		returnSpeed=0;
 		magic=171;
 		score2++;
 		reset();
