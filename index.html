@@ -103,8 +103,16 @@ function update(){
 		reset();
 		}
 	}
-	
-	if(stuck){
+	if(!stuck)
+	{
+	if(p2y+ph/2<=c.width/2+ais&&p2y+ph/2>=c.width/2-ais)
+		p2y=c.width/2-50;
+	if(p2y+ph/2>c.width/2)
+		p2y-=ais;
+	if(p2y+ph/2<c.width/2)
+		p2y+=ais;
+	}
+	else{
 		if(foundSpeed==0)
 			foundSpeed=(cheaty-(p2y+ph/2))/updates;
 	p2y+=foundSpeed;
