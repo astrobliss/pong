@@ -51,7 +51,6 @@ function update(){
 	by+=vy;
 	cheaty+=cheatvy;
 	cheatx+=cheatvx;
-	if(!stuck)updates++;
 	if(cheaty<0&&cheatvy<0){
 		cheatvy=-cheatvy;
 	}
@@ -83,17 +82,11 @@ function update(){
 		cheaty=c.height/2;
 		cheatvx=0;
 		cheatvy=0;
-		updates=0;
-			console.log(updateCount);
-		updateCount=0;
 		foundSpeed=0;
 		stuck=false;
 	}else{
 		cheatvx=0;
 		cheatvy=0;
-		updates=0;
-		console.log(updateCount);
-		updateCount=0;
 		foundSpeed=0;
 		stuck=false;
 		//score1++;
@@ -130,7 +123,7 @@ function update(){
 		if(foundSpeed==0)
 		{
 			foundSpeed=(cheaty-(p2y+50))/magic;
-			console.log('foundSpeedz: '+foundSpeed+ ' ' + updates);
+			console.log('foundSpeedz: '+foundSpeed+ ' ' + magic);
 		}
 			p2y+=foundSpeed;
 		
