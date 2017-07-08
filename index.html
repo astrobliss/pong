@@ -46,7 +46,7 @@ function reset(){
 	cheaty=by;
 	cheatvx=vx*cheatspeed;
 	cheatvy=vy*cheatspeed;
-	var audio = new Audio("atari");
+	var audio = new Audio("atari.mp3");
 			audio.play();
 
 }
@@ -80,7 +80,7 @@ function update(){
 	if(bx>c.width){
 		if(by>p2y&&by<p2y+ph){
 			
-			var audio = new Audio("boop");
+			var audio = new Audio("boop.mp3");
 			audio.play();
 		vx=-vx;
 		
@@ -105,7 +105,7 @@ function update(){
 	}
 	if(bx<0){
 		if(by>p1y&&by<p1y+ph){
-			var audio = new Audio("beep");
+			var audio = new Audio("beep.mp3");
 			audio.play();
 		vx=-vx;
 		dy=by-(p1y+ph/2);
