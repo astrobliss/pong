@@ -4,13 +4,13 @@ p1y=p2y=240;
 pt=10;
 ph=100;
 bx=240;
-by=270;
+by=320;
 bd=6;
 updates=0;
 stuck=false;
 foundSpeed=0;
 	cheatx=240;
-	cheaty=270;
+	cheaty=320;
 	cheatspeed=3;
 speed=5/4;
 vy=vx=speed;
@@ -103,18 +103,10 @@ function update(){
 		reset();
 		}
 	}
-	if(!stuck)
-	{
-	if(p2y+ph/2<=cheaty+ais&&p2y+ph/2>=cheaty-ais)
-		p2y=cheaty;
-	if(p2y+ph/2>cheaty)
-		p2y-=ais;
-	if(p2y+ph/2<cheaty)
-		p2y+=ais;
-	}
-	else{
+	
+	if(stuck){
 		if(foundSpeed==0)
-			foundSpeed=(cheaty-(p2y+ph/2))/updates/4;
+			foundSpeed=(cheaty-(p2y+ph/2))/updates;
 	p2y+=foundSpeed;
 			
 	}
