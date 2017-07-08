@@ -7,6 +7,8 @@ bx=240;
 by=320;
 bd=6;
 updates=0;
+stuck=false;
+foundSpeed=0;
 	cheatx=240;
 	cheaty=320;
 	cheatspeed=3;
@@ -41,6 +43,7 @@ function reset(){
 			audio.play();
 }
 function update(){
+	if(!stuck) updates++;
 	bx+=vx;
 	by+=vy;
 	cheaty+=cheatvy;
@@ -57,6 +60,7 @@ function update(){
 		cheatvy=0;
 		cheatvx=0;
 		console.log('cheat '+cheatx+ ' ' + cheaty);
+		stuck==true;
 	}
 	if(by<0&&vy<0){
 		vy=-vy;
@@ -93,17 +97,27 @@ function update(){
 		cheaty=by;
 		cheatvx=vx*cheatspeed;
 		cheatvy=vy*cheatspeed;
+		updates=0;
 	}else{
 		score2++;
 		reset();
 		}
 	}
+	if(!stuck)
+	{
 	if(p2y+ph/2<=cheaty+ais&&p2y+ph/2>=cheaty-ais)
 		p2y=cheaty-50;
 	if(p2y+ph/2>cheaty)
 		p2y-=ais;
 	if(p2y+ph/2<cheaty)
 		p2y+=ais;
+	}
+	else{
+		if(foundSpeed==0)
+			foundSpeed=(cheaty-(p2y+ph/2))/updates;
+	p2y+=foundSpeed;
+			
+	}
 	cc.fillStyle='black';
 	cc.fillRect(0,0,c.width,c.height);
 	cc.fillStyle='white';
