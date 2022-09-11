@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<div align="center">
+<canvas id="game_canvas" width="640" height="480"></canvas>
+<script>
+const canvas_height = 480;
+const canvas_width = 640;
+const paddle_thickness = 10;
+const paddle_height = 100;
+const ball_size = 6; // ball is a size x size square
+const p1x = 1;
+const p2x = canvas_width - 1 - paddle_thickness;
+const ball_start_speed = 6;
+
+p1y = canvas_height / 2;
+p2y = canvas_height / 2;
+ball_x = canvas_height / 2;
+ball_y = canvas_width / 2;
+ball_vx = ball_start_speed;
+ball_vy = ball_start_speed;
+
+
+magic=171;
+
+stuck=false;
+foundSpeed=0;
+cheatx=320;
+cheaty=240;
+cheatspeed=3;
+returnSpeed=0;
+speed=5/4;
+cheatvy=cheatvx=cheatspeed*speed;
+score1=score2=0;
+ratio=2.5;
+
+
+window.onload=function(){
+c=document.getElementById('game_canvas');
+cc=c.getContext('2d');
+setInterval(update,1000/240);
+c.addEventListener('mousemove',function(e){
+	p1y=e.clientY-paddle_height/2;
+	});
+c.addEventListener('touchmove',function(e){
+	var touchobj = e.changedTouches[0];
+	p1y=parseInt(touchobj.clientY)-paddle_height/2;
+	e.preventDefault();
+	}, false);
+}
+function reset(){
+	ball_x=c.width/2;
+	ball_y=c.height/2;
+	ball_vx=-ball_vx;
+	if(ball_vx<0) ball_vx=vy=-1*speed;
+	else ball_vx=ball_vy=speed;
+	cheatx=ball_x;
+	cheaty=ball_y;
+	cheatvx=ball_vx*cheatspeed;
+	cheatvy=ball_vy*cheatspeed;
+	var audio = new Audio("atari.mp3");
+			audio.play();
+
+}
+function update(){
+	ball_x+=ball_vx;
+	ball_y+=ball_vy;
+	cheaty+=cheatvy;
+	cheatx+=cheatvx;
+	if(cheaty<0&&cheatvy<0){
+		cheatvy=-cheatvy;
+	}
+	if(cheaty>c.height&&cheatvy>0){
+		cheatvy=-cheatvy;
+	}
+
+	if(cheatx>=c.width&&cheatvx!=0)
+	{
+
+		cheatvy=0;
+		cheatvx=0;
+		stuck=true;
+	}
+	if(ball_y<0&&ball_vy<0){
+		ball_vy=-ball_vy;
+	}
+	if(ball_y>c.height&&ball_vy>0){
+		ball_vy=-ball_vy;
+	}
+	if(ball_x>c.width){
+		if(ball_y>p2y&&ball_y<p2y+paddle_height){
+
+			var audio = new Audio("boop.mp3");
+			audio.play();
+		ball_vx=-ball_vx;
+
+		cheatx=c.width/2;
+		cheaty=c.height/2;
+		cheatvx=0;
+		cheatvy=0;
+		foundSpeed=0;
+		counter=0;
+		stuck=false;
+			returnSpeed=0;
+
+	}else{
+		cheatvx=0;
+		cheatvy=0;
+		foundSpeed=0;
+		stuck=false;
+		returnSpeed=0;
+		score1++;
+		reset();
+		}
+	}
+	if(ball_x<0){
+		if(ball_y>p1y&&ball_y<p1y+paddle_height){
+			var audio = new Audio("beep.mp3");
+			audio.play();
+		ball_vx=-ball_vx;
+		dy=ball_y-(p1y+paddle_height/2);
+		ball_vy=dy*.3/4;
+		cheatx=ball_x;
+		cheaty=ball_y;
+		cheatvx=ball_vx*cheatspeed;
+		cheatvy=ball_vy*cheatspeed;
+		magic=343;
+	}else{
+		magic=171;
+		score2++;
+		reset();
+		}
+	}
+	if(!stuck)
+	{
+		if(returnSpeed==0)
+		{
+			returnSpeed=(c.height/2-(p2y+50))/685;
+			console.log('returnSpeed: ' + returnSpeed);
+		}
+			p2y+=returnSpeed;
+	}else{
+		if(foundSpeed==0)
+		{
+			foundSpeed=(cheaty-(p2y+50))/magic;
+			console.log('foundSpeedz: '+foundSpeed+ ' ' + magic);
+		}
+			p2y+=foundSpeed;
+
+	}
+	cc.fillStyle='black';
+	cc.fillRect(0,0,c.width,c.height);
+	cc.fillStyle='white';
+	cc.fillRect(1,p1y,paddle_thickness,paddle_height);
+	cc.fillRect(c.width-1,p2y,-paddle_thickness,paddle_height);
+	cc.fillRect(ball_x-ball_size/2,ball_y-ball_size/2,ball_size,ball_size);
+	//cc.fillStyle='red';
+	//cc.fillRect(cheatx-ball_size/2,cheaty-ball_size/2,ball_size,ball_size);
+	cc.fillStyle='white';
+	cc.fillText(score1,100,100);
+	cc.fillText(score2,c.width-100,100);
+}
+</script>
+</div>
+</html>
