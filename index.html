@@ -113,7 +113,16 @@ function calculate_p2_vel(gs)
 function calculate_bounced_vy(ball_y, paddle_center)
 {
 	dy = ball_y - paddle_center;
-	return dy *  3/40;
+	return dy *  6/25;
+}
+
+function clamp(value, min, max)
+{
+	if (value < min)
+		return min
+	if (max < value)
+		return max
+	return value
 }
 
 function update_game_internal_state(gs)
@@ -158,8 +167,17 @@ function update_game_internal_state(gs)
 		var audio = new Audio("boop.mp3");
 		audio.play();
 		const paddle_center = gs.p1_y + GameInternalState.paddle_height / 2;
-		gs.ball_vy = 2 * calculate_bounced_vy(gs.ball_y, paddle_center);
+		gs.ball_vy = calculate_bounced_vy(gs.ball_y, paddle_center);
 		gs.ball_vx = -gs.ball_vx;
+		if (typeof cheat_speed != "undefined" && Number.isFinite(cheat_speed))
+		{
+
+			effective_speed = clamp(cheat_speed, 0, GameInternalState.canvas_height - 1);
+			effective_speed = 2 * (gs.ball_y - paddle_center) / GameInternalState.paddle_height  * effective_speed;
+			console.log("using clamped speed = [", effective_speed, "]");
+			gs.ball_vy = effective_speed
+			gs.ball_vx = 5 + 1.123456789 * Math.sqrt(Math.abs(effective_speed));
+		}
 		gs.ball_x = GameInternalState.canvas_width - Math.abs(gs.ball_x - GameInternalState.canvas_width);
 		return gs;
 	}
@@ -173,7 +191,7 @@ function update_game_internal_state(gs)
 		audio.play();
 		const paddle_center = gs.p2_y + GameInternalState.paddle_height / 2;
 		gs.ball_vy = calculate_bounced_vy(gs.ball_y, paddle_center);
-		gs.ball_vx = -gs.ball_vx;
+		gs.ball_vx = -clamp(gs.ball_vx, GameInternalState.ball_min_start_speed, GameInternalState.ball_max_start_speed);
 		gs.ball_x = Math.abs(gs.ball_x);
 		return gs;
 	}
@@ -263,6 +281,8 @@ window.onload=function(){
 		},
 		false
 	);
+
+	console.log("Want the ball to move faster? just run cheat_speed=value. Must be in [0,479]");
 }
 
 </script>
