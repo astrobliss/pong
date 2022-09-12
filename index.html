@@ -146,6 +146,8 @@ function update_game_internal_state(gs)
 	const is_ball_in_p1_goal = gs.ball_x > GameInternalState.canvas_width + Math.abs(gs.ball_vx);
 	if (is_ball_in_p1_goal)
 	{
+		var audio = new Audio("atari.mp3");
+		audio.play();
 		gs.p1_score++;
 		gs = reset_ball(gs);
 		return gs;
@@ -172,7 +174,7 @@ function update_game_internal_state(gs)
 		if (typeof cheat_speed != "undefined" && Number.isFinite(cheat_speed))
 		{
 
-			effective_speed = clamp(cheat_speed, 0, GameInternalState.canvas_height - 1);
+			effective_speed = clamp(cheat_speed, 0, GameInternalState.canvas_height + 10);
 			effective_speed = 2 * (gs.ball_y - paddle_center) / GameInternalState.paddle_height  * effective_speed;
 			console.log("using clamped speed = [", effective_speed, "]");
 			gs.ball_vy = effective_speed
@@ -283,6 +285,7 @@ window.onload=function(){
 	);
 
 	console.log("Want the ball to move faster? just run cheat_speed=value. Must be in [0,479]");
+	console.log("If you're a real cheater try setting it to 490...then the sim breaks and you might just score a point");
 }
 
 </script>
