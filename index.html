@@ -3,162 +3,268 @@
 <div align="center">
 <canvas id="game_canvas" width="640" height="480"></canvas>
 <script>
-const canvas_height = 480;
-const canvas_width = 640;
-const paddle_thickness = 10;
-const paddle_height = 100;
-const ball_size = 6; // ball is a size x size square
-const p1x = 1;
-const p2x = canvas_width - 1 - paddle_thickness;
-const ball_start_speed = 6;
 
-p1y = canvas_height / 2;
-p2y = canvas_height / 2;
-ball_x = canvas_height / 2;
-ball_y = canvas_width / 2;
-ball_vx = ball_start_speed;
-ball_vy = ball_start_speed;
+class GameInternalState {
+	static canvas_height = 480;
+	static canvas_width = 640;
+	static paddle_thickness = 10;
+	static paddle_height = 100;
+	static ball_size = 6; // ball is a size x size square
+	static ball_min_start_speed = 5;
+	static ball_max_start_speed = 8;
+	static p1_x = 1;
+	static p2_x = GameInternalState.canvas_width - 1 - GameInternalState.paddle_thickness;
+	// paddle (x,y) = position of top left corner of the paddle
+	// ball (x,y) = position of the center of the ball
+
+	p1_score = 0;
+	p2_score = 0;
+	p1_y = 0;
+	p2_y = 0;
+	ball_x = 0;
+	ball_y = 0;
+	ball_vx = 0;
+	ball_vy = 0;
+}
+
+class GameExternalState {
+	mouse_y = 0;
+}
+
+// Globals
+global_internal_state = new GameInternalState();
+global_external_state = new GameExternalState();
+
+function reset_game(game_internal_state)
+{
+	game_internal_state.p1_score = 0;
+	game_internal_state.p2_score = 0;
+
+	game_internal_state.ball_x = GameInternalState.canvas_height / 2;
+	game_internal_state.ball_y = GameInternalState.canvas_width / 2;
+	game_internal_state.ball_vx = GameInternalState.ball_min_start_speed;
+	game_internal_state.ball_vy = GameInternalState.ball_min_start_speed;
+
+	game_internal_state.p1_y = GameInternalState.canvas_height / 2;
+
+	game_internal_state.p2_y = GameInternalState.canvas_height / 2;
+}
+
+function reset_ball(game_internal_state)
+{
+	game_internal_state.ball_x = GameInternalState.canvas_height / 2;
+	game_internal_state.ball_y = GameInternalState.canvas_width / 2;
+	const speed_range = GameInternalState.ball_max_start_speed - GameInternalState.ball_min_start_speed;
+	game_internal_state.ball_vx = Math.random() * speed_range + GameInternalState.ball_min_start_speed;
+	game_internal_state.ball_vy = Math.random() * speed_range + GameInternalState.ball_min_start_speed;
+	return game_internal_state;
+}
+
+function to_group(ball_y, ball_vy, canvas_height)
+{
+	// Looking at the game, y seems like it should live in $R_{height}$
+	// This is true because when we display the ball it stays onscreen which has coords $[0,height)$
+	// This makes it hard to calculate where the ball will end up though because its velocity keeps switching with each bounce
+	// Ideally the velocity wouldn't change signs and we could just do $y(t) = y_0 + t*vy$
+	// This can be done if we "extend" the values that y lives in. Here [0, height) mean vy>=0 and [height, 2*height) means vy<0
+	// Intuitavely this works because if the ball moves by 2 * height it goes up and down equal amounts -> no movement
+	// Then this can be put onto the screen with $y_draw = height - |height-y|$
+	// Or we can take the screen value and get it here with this function
+	const remainder = ball_y % canvas_height;
+	const ball_mod_y = (remainder + canvas_height) % canvas_height;
+
+	if (ball_vy >= 0)
+	{
+		return ball_mod_y;
+	}
+
+	return 2 * canvas_height - ball_mod_y;
+}
+
+function from_group(group_y, canvas_height)
+{
+	modded_group_y = group_y % (canvas_height * 2);
+	return canvas_height - Math.abs(canvas_height - modded_group_y);
+}
 
 
-magic=171;
+function calculate_p2_vel(gs)
+{
+	const is_ball_approaching_p2 = gs.ball_vx > 0;
+	if (!is_ball_approaching_p2)
+	{
+		const p2_target = GameInternalState.canvas_height / 2 - GameInternalState.paddle_height / 2;
+		const frames_till_p2_target = Math.ceil(-gs.ball_x / gs.ball_vx);
+		if (frames_till_p2_target <= 0)
+			return 0;
+		return (p2_target - gs.p2_y) / frames_till_p2_target;
+	}
 
-stuck=false;
-foundSpeed=0;
-cheatx=320;
-cheaty=240;
-cheatspeed=3;
-returnSpeed=0;
-speed=5/4;
-cheatvy=cheatvx=cheatspeed*speed;
-score1=score2=0;
-ratio=2.5;
 
+	const frames_till_p2_target = Math.ceil((GameInternalState.p2_x - gs.ball_x) / gs.ball_vx);
+	const raw_p2_target =
+		to_group(gs.ball_y, gs.ball_vy, GameInternalState.canvas_height) + Math.abs(gs.ball_vy) * frames_till_p2_target;
+	const p2_target = from_group(raw_p2_target, GameInternalState.canvas_height) - GameInternalState.paddle_height / 2;
+	if (frames_till_p2_target <= 0)
+			return 0;
+	return (p2_target - gs.p2_y) / frames_till_p2_target;
+}
+
+function calculate_bounced_vy(ball_y, paddle_center)
+{
+	dy = ball_y - paddle_center;
+	return dy *  3/40;
+}
+
+function update_game_internal_state(gs)
+{
+	gs.ball_x += gs.ball_vx;
+	gs.ball_y += gs.ball_vy;
+
+	// TODO : make resilent to vel > canvas_height
+	if(gs.ball_y <= 0 && gs.ball_vy < 0){
+		gs.ball_vy = -gs.ball_vy;
+		gs.ball_y = -gs.ball_y;
+	}
+
+	if(gs.ball_y > GameInternalState.canvas_height && gs.ball_vy > 0){
+		gs.ball_vy = -gs.ball_vy;
+		gs.ball_y = 2 * GameInternalState.canvas_height - gs.ball_y;
+	}
+
+	gs.p2_y += calculate_p2_vel(gs);
+
+	const is_ball_in_p1_goal = gs.ball_x > GameInternalState.canvas_width + Math.abs(gs.ball_vx);
+	if (is_ball_in_p1_goal)
+	{
+		gs.p1_score++;
+		gs = reset_ball(gs);
+		return gs;
+	}
+
+	const is_ball_in_p2_goal = gs.ball_x < -Math.abs(gs.ball_vx);
+	if (is_ball_in_p2_goal)
+	{
+		gs.p2_score++;
+		gs = reset_ball(gs);
+		return gs;
+	}
+
+	const is_p1_returning_ball = (gs.ball_vx <  0)
+		&& (gs.ball_x <= (GameInternalState.p1_x + GameInternalState.paddle_thickness))
+		&& (gs.p1_y <= gs.ball_y && gs.ball_y <= gs.p1_y + GameInternalState.paddle_height);
+	if (is_p1_returning_ball)
+	{
+		var audio = new Audio("boop.mp3");
+		audio.play();
+		const paddle_center = gs.p1_y + GameInternalState.paddle_height / 2;
+		gs.ball_vy = 2 * calculate_bounced_vy(gs.ball_y, paddle_center);
+		gs.ball_vx = -gs.ball_vx;
+		gs.ball_x = GameInternalState.canvas_width - Math.abs(gs.ball_x - GameInternalState.canvas_width);
+		return gs;
+	}
+
+	const is_p2_returning_ball = (gs.ball_vx > 0)
+		&& (gs.ball_x >= GameInternalState.p2_x)
+		&& (gs.p2_y <= gs.ball_y && gs.ball_y <= gs.p2_y + GameInternalState.paddle_height);
+	if (is_p2_returning_ball)
+	{
+		var audio = new Audio("boop.mp3");
+		audio.play();
+		const paddle_center = gs.p2_y + GameInternalState.paddle_height / 2;
+		gs.ball_vy = calculate_bounced_vy(gs.ball_y, paddle_center);
+		gs.ball_vx = -gs.ball_vx;
+		gs.ball_x = Math.abs(gs.ball_x);
+		return gs;
+	}
+
+	return gs;
+}
+
+function draw_game(game_internal_state, canvas, canvas_context)
+{
+	//console.log(game_internal_state);
+	canvas_context.fillStyle='black';
+	canvas_context.fillRect(
+		0,
+		0,
+		canvas.width,
+		canvas.height
+	);
+
+	canvas_context.fillStyle='white';
+	canvas_context.fillRect(
+		GameInternalState.p1_x,
+		game_internal_state.p1_y,
+		GameInternalState.paddle_thickness,
+		GameInternalState.paddle_height
+	);
+
+	canvas_context.fillRect(
+		GameInternalState.p2_x,
+		game_internal_state.p2_y,
+		GameInternalState.paddle_thickness,
+		GameInternalState.paddle_height
+	);
+
+	canvas_context.fillRect(
+		game_internal_state.ball_x - GameInternalState.ball_size / 2,
+		game_internal_state.ball_y - GameInternalState.ball_size / 2,
+		GameInternalState.ball_size,
+		GameInternalState.ball_size
+	);
+
+	canvas_context.fillText(
+		game_internal_state.p1_score,
+		100,
+		100
+	);
+
+	canvas_context.fillText(
+		game_internal_state.p2_score,
+		canvas.width-100,
+		100
+	);
+}
+
+function incorperate_external_state(game_internal_state, game_external_state)
+{
+	game_internal_state.p1_y = game_external_state.mouse_y - GameInternalState.paddle_height / 2;
+	return game_internal_state;
+}
+
+function update_game(canvas, canvas_context) {
+	game_internal_state = incorperate_external_state(global_internal_state, global_external_state)
+	global_internal_state = update_game_internal_state(game_internal_state)
+	draw_game(game_internal_state, canvas, canvas_context)
+}
 
 window.onload=function(){
-c=document.getElementById('game_canvas');
-cc=c.getContext('2d');
-setInterval(update,1000/240);
-c.addEventListener('mousemove',function(e){
-	p1y=e.clientY-paddle_height/2;
-	});
-c.addEventListener('touchmove',function(e){
-	var touchobj = e.changedTouches[0];
-	p1y=parseInt(touchobj.clientY)-paddle_height/2;
-	e.preventDefault();
-	}, false);
+	canvas = document.getElementById('game_canvas');
+	canvas_context = canvas.getContext('2d');
+
+	reset_game(global_internal_state);
+
+	const fps = 144;
+	const update_spacing = 1000 / fps;
+	setInterval(update_game, update_spacing, canvas, canvas_context);
+
+	canvas.addEventListener('mousemove',
+		function(e){
+			global_external_state.mouse_y = e.clientY;
+		}
+	);
+
+	canvas.addEventListener('touchmove',
+		function(e){
+			var touchobj = e.changedTouches[0];
+			global_external_state.mouse_y = parseInt(touchobj.clientY);
+			e.preventDefault();
+		},
+		false
+	);
 }
-function reset(){
-	ball_x=c.width/2;
-	ball_y=c.height/2;
-	ball_vx=-ball_vx;
-	if(ball_vx<0) ball_vx=vy=-1*speed;
-	else ball_vx=ball_vy=speed;
-	cheatx=ball_x;
-	cheaty=ball_y;
-	cheatvx=ball_vx*cheatspeed;
-	cheatvy=ball_vy*cheatspeed;
-	var audio = new Audio("atari.mp3");
-			audio.play();
 
-}
-function update(){
-	ball_x+=ball_vx;
-	ball_y+=ball_vy;
-	cheaty+=cheatvy;
-	cheatx+=cheatvx;
-	if(cheaty<0&&cheatvy<0){
-		cheatvy=-cheatvy;
-	}
-	if(cheaty>c.height&&cheatvy>0){
-		cheatvy=-cheatvy;
-	}
-
-	if(cheatx>=c.width&&cheatvx!=0)
-	{
-
-		cheatvy=0;
-		cheatvx=0;
-		stuck=true;
-	}
-	if(ball_y<0&&ball_vy<0){
-		ball_vy=-ball_vy;
-	}
-	if(ball_y>c.height&&ball_vy>0){
-		ball_vy=-ball_vy;
-	}
-	if(ball_x>c.width){
-		if(ball_y>p2y&&ball_y<p2y+paddle_height){
-
-			var audio = new Audio("boop.mp3");
-			audio.play();
-		ball_vx=-ball_vx;
-
-		cheatx=c.width/2;
-		cheaty=c.height/2;
-		cheatvx=0;
-		cheatvy=0;
-		foundSpeed=0;
-		counter=0;
-		stuck=false;
-			returnSpeed=0;
-
-	}else{
-		cheatvx=0;
-		cheatvy=0;
-		foundSpeed=0;
-		stuck=false;
-		returnSpeed=0;
-		score1++;
-		reset();
-		}
-	}
-	if(ball_x<0){
-		if(ball_y>p1y&&ball_y<p1y+paddle_height){
-			var audio = new Audio("beep.mp3");
-			audio.play();
-		ball_vx=-ball_vx;
-		dy=ball_y-(p1y+paddle_height/2);
-		ball_vy=dy*.3/4;
-		cheatx=ball_x;
-		cheaty=ball_y;
-		cheatvx=ball_vx*cheatspeed;
-		cheatvy=ball_vy*cheatspeed;
-		magic=343;
-	}else{
-		magic=171;
-		score2++;
-		reset();
-		}
-	}
-	if(!stuck)
-	{
-		if(returnSpeed==0)
-		{
-			returnSpeed=(c.height/2-(p2y+50))/685;
-			console.log('returnSpeed: ' + returnSpeed);
-		}
-			p2y+=returnSpeed;
-	}else{
-		if(foundSpeed==0)
-		{
-			foundSpeed=(cheaty-(p2y+50))/magic;
-			console.log('foundSpeedz: '+foundSpeed+ ' ' + magic);
-		}
-			p2y+=foundSpeed;
-
-	}
-	cc.fillStyle='black';
-	cc.fillRect(0,0,c.width,c.height);
-	cc.fillStyle='white';
-	cc.fillRect(1,p1y,paddle_thickness,paddle_height);
-	cc.fillRect(c.width-1,p2y,-paddle_thickness,paddle_height);
-	cc.fillRect(ball_x-ball_size/2,ball_y-ball_size/2,ball_size,ball_size);
-	//cc.fillStyle='red';
-	//cc.fillRect(cheatx-ball_size/2,cheaty-ball_size/2,ball_size,ball_size);
-	cc.fillStyle='white';
-	cc.fillText(score1,100,100);
-	cc.fillText(score2,c.width-100,100);
-}
 </script>
 </div>
 </html>
